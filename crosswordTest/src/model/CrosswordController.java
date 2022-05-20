@@ -12,6 +12,11 @@ public class CrosswordController {
 	 * Matrix of cells representing the crossword puzzle
 	 */
 	private Cell [][] crossword;
+
+
+	public CrosswordController() {
+		this.crossword = new Cell[100][100];
+	}
 	
 	/**
 	 * method for initializing a crossword puzzle
@@ -19,7 +24,28 @@ public class CrosswordController {
 	 * the initial state of a crossword puzzle
 	 */
 	public void initCrossword(String[][] puzzle) {
-		
+		this.crossword = new Cell[puzzle.length][puzzle[0].length];
+		int count=0;
+
+		for(int i =0; i<puzzle.length; i++){
+			for(int j = 0; j<puzzle[0].length; j++){
+
+				count++;
+				String letter = puzzle[i][j];
+
+				Cell obj = new Cell(CellType.CLOSED, letter, count);
+
+				if(puzzle[i][j]==" "){
+					obj = new Cell(CellType.BLACK, letter, 0);
+					count--;
+				}
+
+				crossword[i][j] = obj;
+
+			}
+		}
+
+
 		
 	}
 	/**
@@ -52,7 +78,24 @@ public class CrosswordController {
 	 */
 	public String getHint(String letter) {
 		
-		return null;
+		String out = "";
+		boolean flag = false;
+
+		for(int i =0; i<crossword.length && flag == false; i++){
+			for(int j = 0; j<crossword[0].length && flag == false; j++){
+				Cell obj = crossword[i][j];
+				if(obj.getLetter().equalsIgnoreCase(letter) && obj.getState()==CellType.CLOSED){
+					out="There is a word with the letter "+ letter +" in the crossword in the box "+obj.getNumber();
+					obj.setState(CellType.OPEN);
+					flag = true;
+				} else {
+					out="I'm sorry, there are no words with that letter";
+				}
+
+			}
+		}
+
+		return out;
 	}
 	
 	/**
